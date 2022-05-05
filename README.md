@@ -1,0 +1,1 @@
+VisionLoss is a 2-player labyrinth-based game using field of view and cellulos
