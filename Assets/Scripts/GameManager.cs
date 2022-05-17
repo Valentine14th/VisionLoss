@@ -88,6 +88,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Method to get the code length
+    public int getCodeLength()
+    {
+        return codeLength;
+    }
+
     // Method to check if the entered code of the player is correct
     public bool checkCode(int player)
     {
