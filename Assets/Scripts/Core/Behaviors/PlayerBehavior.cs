@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,23 +10,76 @@ public class PlayerBehavior : AgentBehaviour
     private Zone currentZone; // The current zone the player is in, none, the code transmission zone, or the door zone
     public float waitTime; // The waiting time between code pulses
     private bool correctCodeEntered; // Whether the correct code has been entered yet or not
+    private GameObject codeZone; // Zone where the coad is shown
+    private GameObject doorZone; // Zone where the code is read
+
+    public float linSpeed; // Linear speed to move to the center of a zone
+    public float angSpeed; // Angular speed to move to the center of a zone
+
+    public float epsilon; // Precision of position checks
 
     // Enum which describes in which zone the player is currently in
     private enum Zone
     {
-        None,
-        Code,
-        Door
+        None, // No zone
+        Code, // Code zone
+        Door // Door zone
     }
 
     void Start()
     {
+        codeZone = GameObject.FindGameObjectWithTag("player" + playerID + "code");
+        doorZone = GameObject.FindGameObjectWithTag("player" + playerID + "door");
         agent.SetCasualBackdriveAssistEnabled(true);
+    }
+
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        if(collisionInfo.collider == codeZone || collisionInfo.collider == doorZone)
+        {
+            // Move the cellulo to the center of the zone
+            agent.isMoved = false;
+            agent.SetCasualBackdriveAssistEnabled(false);
+            Vector3 position = collisionInfo.collider.transform.position;
+            agent._celluloRobot.SetGoalPose(position.x, position.z, 0, linSpeed, angSpeed);
+            StartCoroutine(waitUntilAtSpot(position.x, position.z, 0));
+            if(collisionInfo.collider == codeZone)
+            {
+                currentZone = Zone.Code;
+            }
+            else if(!correctCodeEntered)
+            {
+                currentZone = Zone.Door;
+            }
+        }
+    }
+
+    // Coroutine to wait until the cellulo is at a given position and angle
+    private IEnumerator waitUntilAtSpot(float x, float y, float t)
+    {
+        yield return new WaitUntil(() => Math.Abs(agent._celluloRobot.GetX() - x) <= epsilon && Math.Abs(agent._celluloRobot.GetY() - y) <= epsilon && Math.Abs(agent._celluloRobot.GetTheta() - t) <= epsilon);
     }
 
     void FixedUpdate()
     {
-
+        if(currentZone == Zone.None)
+        {
+            // Code to flee walls
+        }
+        else
+        {
+            if(currentZone == Zone.Code)
+            {
+                showCode();
+            }
+            else
+            {
+                readCode();
+            }
+            agent.isMoved = true; // Allow the cellulo to be moved
+            agent.SetCasualBackdriveAssistEnabled(true); // Enable the backdrive assist
+            currentZone = Zone.None; // Reset the zone
+        }
     }
 
     // Method to show the code on the cellulo
