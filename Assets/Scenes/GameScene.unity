@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 71135893}
   - component: {fileID: 71135892}
   m_Layer: 0
-  m_Name: Player 2 Code Zone
+  m_Name: Code Zone 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1312,6 +1312,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
   m_PrefabInstance: {fileID: 1622802240}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &911543769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911543768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0637a81a764e8044a27df86077d3f7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weight: 1
+  playerID: 0
+  gameManager: {fileID: 0}
+  waitTime: 0
+  linSpeed: 0
+  angSpeed: 0
+  epsilon: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,6 +1423,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 981685280}
+  - component: {fileID: 981685281}
   m_Layer: 0
   m_Name: SceneGlobal
   m_TagString: Untagged
@@ -1435,6 +1455,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &981685281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981685279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 829a24db2c04500428f0aefd0ee99c5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nbOfDoors: 0
 --- !u!1 &1134594524
 GameObject:
   m_ObjectHideFlags: 0
@@ -2254,7 +2287,7 @@ GameObject:
   - component: {fileID: 1392972115}
   - component: {fileID: 1392972114}
   m_Layer: 0
-  m_Name: Player 1 Code Zone
+  m_Name: Code Zone 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2582,8 +2615,8 @@ GameObject:
   - component: {fileID: 1624782267}
   - component: {fileID: 1624782266}
   m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
+  m_Name: CodeDisplay
+  m_TagString: CodeDisplay
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

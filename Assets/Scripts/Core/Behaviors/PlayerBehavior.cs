@@ -85,7 +85,7 @@ public class PlayerBehavior : AgentBehaviour
     // Method to show the code on the cellulo
     private void showCode()
     {
-        Color color = (playerID == 1) ? Color.red : Color.blue;
+        Color color = (playerID == 1) ? Color.red : Color.blue; // la couleur doit plutôt dépendre de la porte associée
         int[] code = gameManager.GetComponent<GameManager>().getCode(playerID);
         for(int i = 0; i < code.Length; ++i)
         {
@@ -123,7 +123,7 @@ public class PlayerBehavior : AgentBehaviour
                     }
                 }
             }
-            returnCode = gameManager.GetComponent<GameManager>().enterKeyStroke(playerID, currentKey);
+            //returnCode = gameManager.GetComponent<GameManager>().enterKeyStroke(playerID, currentKey);
             StartCoroutine(waitForRelease(currentKey));
         }
         if(returnCode == GameManager.CodeCheckReturn.Correct)

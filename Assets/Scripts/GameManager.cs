@@ -7,11 +7,13 @@ public class GameManager : MonoBehaviour
 
     // ------- VARIABLES FOR CODE MANAGEMENT ------- //
 
-    private int[] player1Code;          // Code for the first player
+    private int[,] codes;               // Code for each door
     private int[] player1EnteredCode;   // The code the first player currently entered
-    private int[] player2Code;          // Code for the second player
     private int[] player2EnteredCode;   // The code the second player currently entered
+    private GameObject[] codeZones;     // the set of code zones
     private int codeLength;             // Length of the codes
+    public int nbOfDoors;               // nb of doors and thus codes in the level
+    private bool webGame;               // whether we are playing the webbased game
 
     // Enum to specify what is returned to the cellulos' scripts
     public enum CodeCheckReturn
@@ -28,6 +30,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        setNbOfDoor(2);
+        setCodeLength(6);
+        generateCodes();
         
     }
 
@@ -41,24 +46,46 @@ public class GameManager : MonoBehaviour
 
     // ------- METHODS FOR CODE MANAGEMENT ------- //
 
+    public void setNbOfDoor(int nb)
+    {
+        nbOfDoors = nb;
+    }
+
     // Method to set a new code length
     public void setCodeLength(int length)
     {
         codeLength = length;
     }
 
-    // Method to generate random codes of the given length
-    public void generateCodes()
+    public bool isWebGame()
     {
-        player1Code = new int[codeLength];
-        player2Code = new int[codeLength];
-        for(int i = 0; i < codeLength; ++i)
-        {
-            player1Code[i] = Random.Range(0, 6);
-            player2Code[i] = Random.Range(0, 6);
-        }
+        return webGame;
     }
 
+    // Method to generate random codes of the given length and bind them to code zones 
+    public void generateCodes()
+    {
+        codes = new int[nbOfDoors, codeLength];
+        for (int j = 0; j < nbOfDoors; ++j)
+        {
+            for (int i = 0; i < codeLength; ++i)
+            {
+                codes[j, i] = Random.Range(0, Config.CELLULO_KEYS);
+            }
+        }
+
+
+        // TODO assign them to code zones and doors
+        codeZones = GameObject.FindGameObjectsWithTag("CodeZone");
+        for(int i=0; i < nbOfDoors; ++i)
+        {
+
+            codeZones[i].GetComponent<CodeZoneBehavior>().setCode(getCode(i));
+        }
+
+    }
+
+    /*
     // Method to reset the codes entered by a given player
     public void resetEnteredCode(int player)
     {
@@ -74,18 +101,17 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    */
 
-    // Method to return the code from a particular player
-    public int[] getCode(int player)
+    // Method to return the code from a code zone
+    public int[] getCode(int zone)
     {
-        if(player == 1)
+        int[] ret = new int[codeLength];
+        for (int i = 0; i < codeLength; ++i)
         {
-            return player1Code;
+            ret[i] = codes[zone, i];
         }
-        else
-        {
-            return player2Code;
-        }
+        return ret;
     }
 
     // Method to get the code length
@@ -94,6 +120,7 @@ public class GameManager : MonoBehaviour
         return codeLength;
     }
 
+    /*
     // Method to check if the entered code of the player is correct
     public bool checkCode(int player)
     {
@@ -116,7 +143,9 @@ public class GameManager : MonoBehaviour
         }
         return true;
     }
+    */
 
+    /*
     // Method to register a key stroke in a given code. This returns Correct if the code is correct, Wrong if the code is wrong (as well
     // as resetting the entered code) and Incomplete if the code has not been fully sent yet
     public CodeCheckReturn enterKeyStroke(int player, int key)
@@ -183,6 +212,7 @@ public class GameManager : MonoBehaviour
         return CodeCheckReturn.Incomplete;
         
     }
+    */
 
     // Method called when a given player has entered the correct code
     public void onCorrectCode(int player)
