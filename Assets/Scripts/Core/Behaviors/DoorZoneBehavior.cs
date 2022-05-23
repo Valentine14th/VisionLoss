@@ -9,6 +9,8 @@ public class DoorZoneBehavior : MonoBehaviour
     public GameObject codeZone;
     private CodeZoneBehavior codeZoneScript;
     public GameObject codeDisplay;
+    private bool isShowing; // true when the enterCode display is showing
+    private int[] enteredCode; //the code the user has currently entered
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +22,14 @@ public class DoorZoneBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
+
+    public int[] getCorrectCode()
+    {
+        return codeZoneScript.getCode();
+    }
+
 
     void onCollisionEnter(Collision collisionInfo)
     {
@@ -31,7 +39,7 @@ public class DoorZoneBehavior : MonoBehaviour
             if (gameManager.isWebGame())
             {
                 GameObject display = GameObject.FindGameObjectWithTag("CodeDisplay");
-                display.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor());
+                display.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor(), gameObject);
             }
             else
             {

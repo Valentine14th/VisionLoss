@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        setNbOfDoors(2);
         setCodeLength(6);
         generateCodes();
         
@@ -71,6 +70,9 @@ public class GameManager : MonoBehaviour
     // Method to generate random codes of the given length and bind them to code zones 
     private void generateCodes()
     {
+        codeZones = GameObject.FindGameObjectsWithTag("CodeZone");
+        setNbOfDoors(codeZones.Length);
+
         codes = new int[nbOfDoors, codeLength];
         for (int j = 0; j < nbOfDoors; ++j)
         {
@@ -81,9 +83,8 @@ public class GameManager : MonoBehaviour
         }
 
 
-        // TODO assign them to code zones and doors
-        codeZones = GameObject.FindGameObjectsWithTag("CodeZone");
-        for(int i=0; i < nbOfDoors; ++i)
+        // assign them to code zones and doors
+        for (int i=0; i < nbOfDoors; ++i)
         {
             CodeZoneBehavior zone = codeZones[i].GetComponent<CodeZoneBehavior>();
 

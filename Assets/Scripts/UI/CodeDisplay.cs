@@ -5,13 +5,16 @@ using UnityEngine;
 
 public class CodeDisplay : MonoBehaviour
 {
-    private bool enterCodeMode;
-    private GameObject[] buttons;
-    private GameObject clear;
     public GameObject GameManager;
     private GameManager gameManager;
-    private List<int> enteredCode;
-    private bool initialized;
+    private bool enterCodeMode; //whether the display is in enter code mode
+    private GameObject[] buttons; // the code entering buttons
+    private GameObject clear; // the clear button
+    private GameObject retry; // retry Text
+    private List<int> enteredCode; // the code currently entered by the user
+    private bool initialized; // whether the buttons have been put in their varîables yet
+    private GameObject currentDoorZone; // is updated whenever enterCode() is called
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,20 +22,22 @@ public class CodeDisplay : MonoBehaviour
         initialized = false;
         enteredCode = new List<int>();
         
-
     }
 
-    // called whenever the object is enabled and active
+    // called whenever the object is enabled and active, necessary because find only finds active objects
     void OnEnable()
     {
         if (!initialized)
         {
+            /* strict order of buttons
             for (int i = 0; i < gameManager.getNbOfDoors(); ++i)
             {
                 buttons[i] = GameObject.Find("B" + i);
             }
-            //buttons = GameObject.FindGameObjectsWithTag("CodeButton");
+            */
+            buttons = GameObject.FindGameObjectsWithTag("CodeButton");
             clear = GameObject.Find("Clear");
+            retry = GameObject.Find("Retry");
             initialized = true;
 
         }
@@ -43,12 +48,6 @@ public class CodeDisplay : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public void setToEnterCodeMode(bool choice)
-    {
-        enterCodeMode = choice;
-
     }
 
     // coroutine to display the code on UI
@@ -81,8 +80,9 @@ public class CodeDisplay : MonoBehaviour
     }
 
     // opens up the code display in enterCode mode 
-    public void enterCode(Color color)
+    public void enterCode(Color color, GameObject doorZone)
     {
+        currentDoorZone = doorZone;
         gameObject.SetActive(true);
         if (!enterCodeMode)
         {
@@ -97,16 +97,28 @@ public class CodeDisplay : MonoBehaviour
         }
     }
 
+    private IEnumerator displayRetry()
+    {
+        retry.SetActive(true);
+        yield return new WaitForSeconds(gameManager.waitTime);
+        retry.SetActive(false);
+
+    }
+
     //checks that the entered code is the same as the given code, clears buffer if full lenght but wrong
-    private bool checkCode(int[] code)
+    private bool checkCode()
     {
         if(enteredCode.Count == gameManager.getCodeLength())
         {
             for(int i = 0; i < gameManager.getCodeLength(); ++i)
             {
-                if(enteredCode[i] != code[i])
+                if(enteredCode[i] != currentDoorZone.GetComponent<DoorZoneBehavior>().getCorrectCode() [i])
                 {
                     enteredCode.Clear();
+                    if (gameManager.isWebGame())
+                    {
+                        StartCoroutine(displayRetry());
+                    }
                     return false;
                 }
             }
@@ -118,18 +130,28 @@ public class CodeDisplay : MonoBehaviour
         }
     }
 
+    // is called whenever a UI code button is pushed
     public void addCodeDigit(int i)
     {
-        if(enteredCode.Count >= gameManager.getCodeLength())
-        {
-            enteredCode.Clear();
-        }
         enteredCode.Add(i);
+        if (checkCode())
+        {
+            // close display and open door
+            gameObject.SetActive(false);
+            currentDoorZone.SetActive(false);
+            //play a sound?
+
+        }
 
     }
 
     public void clearCode()
     {
         enteredCode.Clear();
+    }
+
+    public void closeDisplay()
+    {
+        gameObject.SetActive(false);
     }
 }
