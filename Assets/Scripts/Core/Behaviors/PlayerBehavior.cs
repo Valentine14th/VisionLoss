@@ -3,6 +3,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Input Keys
+public enum InputKeyboard{
+    arrows =0, 
+    wasd = 1
+}
 public class PlayerBehavior : AgentBehaviour
 {
     public int playerID; // PLayer ID, 1 or 2
@@ -16,6 +21,7 @@ public class PlayerBehavior : AgentBehaviour
     public float angSpeed; // Angular speed to move to the center of a zone
 
     public float epsilon; // Precision of position checks
+    public InputKeyboard inputKeyboard; 
 
     // Enum which describes in which zone the player is currently in
     private enum Zone
@@ -143,6 +149,28 @@ public class PlayerBehavior : AgentBehaviour
     private IEnumerator waitForRelease(int key)
     {
         yield return new WaitUntil(() => agent._celluloRobot.GetTouch(key) == Touch.TouchReleased);
+    }
+
+    public override Steering GetSteering()
+    {
+        Steering steering = new Steering();
+
+        float horizontal;
+        float vertical;
+
+        if(inputKeyboard == InputKeyboard.arrows){
+            horizontal=Input.GetAxis("HorizontalArrows");
+            vertical=Input.GetAxis("VerticalArrows");
+        }
+        else{
+            horizontal=Input.GetAxis("HorizontalWASD");
+            vertical=Input.GetAxis("VerticalWASD");
+        }
+        
+
+        steering.linear=new Vector3(horizontal, 0,vertical)*  agent.maxAccel;
+        steering.linear=this.transform.parent.TransformDirection(Vector3.ClampMagnitude(steering.linear, agent.maxAccel));
+        return steering;
     }
 
 }
