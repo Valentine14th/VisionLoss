@@ -8,9 +8,8 @@ public class PlayerBehavior : AgentBehaviour
     public int playerID; // PLayer ID, 1 or 2
     public GameObject gameManager; // Game manager object
     private Zone currentZone; // The current zone the player is in, none, the code transmission zone, or the door zone
-    public float waitTime; // The waiting time between code pulses
     private bool correctCodeEntered; // Whether the correct code has been entered yet or not
-    private GameObject codeZone; // Zone where the coad is shown
+    private GameObject codeZone; // Zone where the code is shown
     private GameObject doorZone; // Zone where the code is read
 
     public float linSpeed; // Linear speed to move to the center of a zone
@@ -99,7 +98,7 @@ public class PlayerBehavior : AgentBehaviour
     // Coroutine to wait for a given amount of time
     private IEnumerator waitForTime()
     {
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(gameManager.GetComponent<GameManager>().waitTime);
     }
 
     // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise

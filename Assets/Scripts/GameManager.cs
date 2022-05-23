@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private int codeLength;             // Length of the codes
     public int nbOfDoors;               // nb of doors and thus codes in the level
     private bool webGame;               // whether we are playing the webbased game
+    public float waitTime;              // time between code display pulses
 
     // Enum to specify what is returned to the cellulos' scripts
     public enum CodeCheckReturn
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        setNbOfDoor(2);
+        setNbOfDoors(2);
         setCodeLength(6);
         generateCodes();
         
@@ -46,9 +47,14 @@ public class GameManager : MonoBehaviour
 
     // ------- METHODS FOR CODE MANAGEMENT ------- //
 
-    public void setNbOfDoor(int nb)
+    public void setNbOfDoors(int nb)
     {
         nbOfDoors = nb;
+    }
+
+    public int getNbOfDoors()
+    {
+        return nbOfDoors;
     }
 
     // Method to set a new code length
@@ -63,7 +69,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Method to generate random codes of the given length and bind them to code zones 
-    public void generateCodes()
+    private void generateCodes()
     {
         codes = new int[nbOfDoors, codeLength];
         for (int j = 0; j < nbOfDoors; ++j)
@@ -79,8 +85,10 @@ public class GameManager : MonoBehaviour
         codeZones = GameObject.FindGameObjectsWithTag("CodeZone");
         for(int i=0; i < nbOfDoors; ++i)
         {
+            CodeZoneBehavior zone = codeZones[i].GetComponent<CodeZoneBehavior>();
 
-            codeZones[i].GetComponent<CodeZoneBehavior>().setCode(getCode(i));
+            zone.setCode(getCode(i));
+            zone.setColor(Random.ColorHSV());
         }
 
     }

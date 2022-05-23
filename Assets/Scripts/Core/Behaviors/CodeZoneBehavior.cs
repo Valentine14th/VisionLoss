@@ -5,11 +5,13 @@ using UnityEngine;
 public class CodeZoneBehavior : MonoBehaviour
 {
     private int[] code;
+    private Color color;
     public GameObject GameManager;
-    public GameObject door;
+    private GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameManager.GetComponent<GameManager>();
         
     }
 
@@ -24,14 +26,27 @@ public class CodeZoneBehavior : MonoBehaviour
         code = bindCode;
     }
 
-    public void OnTriggerEnter()
+    public void setColor(Color c)
     {
-        if (GameManager.GetComponent<GameManager>().isWebGame())
+        color = c;
+    }
+
+    public Color getColor()
+    {
+        return color;
+    }
+
+    public int[] getCode()
+    {
+        return code;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (gameManager.isWebGame())
         {
             GameObject display = GameObject.FindGameObjectWithTag("CodeDisplay");
-            display.SetActive(true);
-
-
+            display.GetComponent<CodeDisplay>().displayCode(code, color);
         }
         else
         {
