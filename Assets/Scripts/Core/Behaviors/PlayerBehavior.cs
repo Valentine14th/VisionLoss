@@ -40,15 +40,15 @@ public class PlayerBehavior : AgentBehaviour
 
     void OnCollisionEnter(Collision collisionInfo)
     {
-        if(collisionInfo.collider == codeZone || collisionInfo.collider == doorZone)
+        if(collisionInfo.collider.tag == "CodeZone" || collisionInfo.collider == doorZone)
         {
             // Move the cellulo to the center of the zone
             agent.isMoved = false;
             agent.SetCasualBackdriveAssistEnabled(false);
-            Vector3 position = collisionInfo.collider.transform.position;
-            agent._celluloRobot.SetGoalPose(position.x, position.z, 0, linSpeed, angSpeed);
-            StartCoroutine(waitUntilAtSpot(position.x, position.z, 0));
-            if(collisionInfo.collider == codeZone)
+            //Vector3 position = collisionInfo.collider.transform.position;
+            //agent._celluloRobot.SetGoalPose(position.x, position.z, 0, linSpeed, angSpeed);
+            //StartCoroutine(waitUntilAtSpot(position.x, position.z, 0));
+            if(collisionInfo.collider.tag == "CodeZone")
             {
                 currentZone = Zone.Code;
             }

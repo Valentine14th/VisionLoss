@@ -8,6 +8,8 @@ public class CodeZoneBehavior : MonoBehaviour
     private Color color;
     public GameObject GameManager;
     private GameManager gameManager;
+
+    public GameObject display;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,9 +45,9 @@ public class CodeZoneBehavior : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (gameManager.isWebGame())
+        Debug.Log("trigger");
+        if(true)// if (gameManager.isWebGame())
         {
-            GameObject display = GameObject.FindGameObjectWithTag("CodeDisplay");
             display.GetComponent<CodeDisplay>().displayCode(code, color);
         }
         else
