@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641252, b: 0.574817, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -608,13 +608,14 @@ GameObject:
   - component: {fileID: 234973685}
   - component: {fileID: 234973684}
   - component: {fileID: 234973683}
+  - component: {fileID: 234973687}
   m_Layer: 0
   m_Name: FogOfWarPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &234973683
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -648,7 +649,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e1faa7e77cb8a3933bdf6951c6542cc6, type: 2}
+  - {fileID: 2100000, guid: 19c6d2a937f3f4945954aff14f30b492, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -692,6 +693,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &234973687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234973682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f684776ee9d0d7c458475bad347cb63b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellulo1: {fileID: 1841475256}
+  cellulo2: {fileID: 1823491863}
 --- !u!1 &263866148
 GameObject:
   m_ObjectHideFlags: 0
@@ -3200,6 +3215,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1823491863 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
+  m_PrefabInstance: {fileID: 1622802240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1841475256 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3040563576298773591, guid: d44936f6062330e28ab4d37456de1881, type: 3}
+  m_PrefabInstance: {fileID: 1430802100}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1909038718
 GameObject:
   m_ObjectHideFlags: 0
