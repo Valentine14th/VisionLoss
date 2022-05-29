@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +17,13 @@ public class GameManager : MonoBehaviour
     public int nbOfDoors;               // nb of doors and thus codes in the level
     private bool webGame;               // whether we are playing the webbased game
     public float waitTime;              // time between code display pulses
+
+    private int startTime = 0;
+    private int currentTime = 0;
+    private bool isTimerRunning = false;
+    public TMP_Text timerText;
+
+    public GameObject winDisplay;
 
     // Enum to specify what is returned to the cellulos' scripts
     public enum CodeCheckReturn
@@ -39,10 +48,31 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (isTimerRunning)
+        {
+            currentTime = (int)Time.time - startTime;
+            
+            string text = string.Format("{0:00}:{1:00}", currentTime / 60, currentTime % 60);
+            timerText.SetText("" + text);
+        }
     }
 
+    public void StartTimer(){
+        isTimerRunning = true;
+    }
 
+    public void StopTimer(){
+        isTimerRunning = false;
+    }
+
+    public void ResetTimer(){
+        startTime = (int)Time.time;
+    }
+
+    public void Win(){
+        StopTimer();
+        winDisplay.SetActive(true);
+    }
 
     // ------- METHODS FOR CODE MANAGEMENT ------- //
 
