@@ -31,15 +31,17 @@ public class DoorZoneBehavior : MonoBehaviour
     }
 
 
-    void onCollisionEnter(Collision collisionInfo)
+    void OnCollisionEnter(Collision collisionInfo)
     {
-        Collider cellulo = collisionInfo.collider;
+        Debug.Log("collison with door!");
+        GameObject cellulo = collisionInfo.collider.transform.parent.gameObject;
+        Debug.Log("coolider is: " + cellulo.name);
         if(cellulo.tag == "Cellulo")
         {
-            if (gameManager.isWebGame())
+            if (true) //gameManager.isWebGame()
             {
-                GameObject display = GameObject.FindGameObjectWithTag("CodeDisplay");
-                display.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor(), gameObject);
+                Debug.Log("is it is a cellulo");
+                codeDisplay.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor(), gameObject);
             }
             else
             {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System.Threading;
 
 public class CodeDisplay : MonoBehaviour
 {
@@ -10,17 +11,22 @@ public class CodeDisplay : MonoBehaviour
     private bool enterCodeMode; //whether the display is in enter code mode
     private GameObject[] buttons; // the code entering buttons
     private GameObject clear; // the clear button
-    private GameObject retry; // retry Text
+    public GameObject retry; // retry Text
     private List<int> enteredCode; // the code currently entered by the user
     private bool initialized; // whether the buttons have been put in their varîables yet
     private GameObject currentDoorZone; // is updated whenever enterCode() is called
 
+    private CodeDisplay()
+    {
+        initialized = false;
+        enteredCode = new List<int>();
+        enterCodeMode = true;
+    }
+    
+    
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameManager.GetComponent<GameManager>();
-        initialized = false;
-        enteredCode = new List<int>();
         
     }
 
@@ -37,8 +43,9 @@ public class CodeDisplay : MonoBehaviour
             */
             buttons = GameObject.FindGameObjectsWithTag("CodeButton");
             clear = GameObject.Find("Clear");
-            retry = GameObject.Find("Retry");
+            //retry = GameObject.Find("Retry");
             initialized = true;
+            gameManager = GameManager.GetComponent<GameManager>();
 
         }
 
@@ -51,15 +58,17 @@ public class CodeDisplay : MonoBehaviour
     }
 
     // coroutine to display the code on UI
-    private IEnumerator displaySlowly(float waitTime, Color color)
+    private IEnumerator displaySlowly(float waitTime, Color color, int[] code)
     {
-        for (int i = 0; i < gameManager.getNbOfDoors(); ++i)
+        for (int i = 0; i < GameManager.GetComponent<GameManager>().getCodeLength(); ++i)
         {
-            Image buttonImage = buttons[i].GetComponent<Image>();
+            Debug.Log("code digit " + i);
+            Image buttonImage = buttons[code[i]].GetComponent<Image>();
             Color initial = buttonImage.color;
             buttonImage.color = color;
             yield return new WaitForSeconds(waitTime);
             buttonImage.color = initial;
+            yield return new WaitForSeconds(waitTime / 2);
         }
     }
 
@@ -67,6 +76,8 @@ public class CodeDisplay : MonoBehaviour
     public void displayCode(int[] code, Color color)
     {
         gameObject.SetActive(true);
+        clearButtons();
+       
         if (enterCodeMode)
         {
             enterCodeMode = false;
@@ -76,14 +87,18 @@ public class CodeDisplay : MonoBehaviour
                 button.GetComponent<Button>().enabled = false;
             }
         }
-        StartCoroutine(displaySlowly(gameManager.waitTime, color));
+
+        StartCoroutine(displaySlowly(GameManager.GetComponent<GameManager>().waitTime, color, code));
     }
 
     // opens up the code display in enterCode mode 
     public void enterCode(Color color, GameObject doorZone)
     {
+        Debug.Log("enterCode called");
         currentDoorZone = doorZone;
         gameObject.SetActive(true);
+        clearButtons();
+
         if (!enterCodeMode)
         {
             foreach (var button in buttons)
@@ -95,12 +110,14 @@ public class CodeDisplay : MonoBehaviour
             }
 
         }
+        
     }
 
     private IEnumerator displayRetry()
     {
+        Debug.Log("display retry called");
         retry.SetActive(true);
-        yield return new WaitForSeconds(gameManager.waitTime);
+        yield return new WaitForSeconds(gameManager.waitTime*2);
         retry.SetActive(false);
 
     }
@@ -112,20 +129,23 @@ public class CodeDisplay : MonoBehaviour
         {
             for(int i = 0; i < gameManager.getCodeLength(); ++i)
             {
-                if(enteredCode[i] != currentDoorZone.GetComponent<DoorZoneBehavior>().getCorrectCode() [i])
+                if(enteredCode[i] != currentDoorZone.GetComponent<DoorZoneBehavior>().getCorrectCode()[i])
                 {
+                    Debug.Log("code is wrong");
                     enteredCode.Clear();
-                    if (gameManager.isWebGame())
+                    if (true) //gameManager.isWebGame()
                     {
                         StartCoroutine(displayRetry());
                     }
                     return false;
                 }
             }
+            Debug.Log("code is correct");
             return true;
         }
         else
         {
+            Debug.Log("code is not long enough yet");
             return false;
         }
     }
@@ -134,6 +154,7 @@ public class CodeDisplay : MonoBehaviour
     public void addCodeDigit(int i)
     {
         enteredCode.Add(i);
+        Debug.Log("added digit");
         if (checkCode())
         {
             // close display and open door
@@ -153,5 +174,13 @@ public class CodeDisplay : MonoBehaviour
     public void closeDisplay()
     {
         gameObject.SetActive(false);
+    }
+
+    private void clearButtons()
+    {
+        foreach(var button in buttons)
+        {
+            button.GetComponent<Image>().color = Color.black;
+        }
     }
 }
