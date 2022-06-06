@@ -9,16 +9,15 @@ public class GameManager : MonoBehaviour
 
     // ------- VARIABLES FOR CODE MANAGEMENT ------- //
 
-    private int[,] codes;               // Code for each door
-    private int[] player1EnteredCode;   // The code the first player currently entered
-    private int[] player2EnteredCode;   // The code the second player currently entered
-    private GameObject[] codeZones;     // the set of code zones
-    private int codeLength;             // Length of the codes
-    private int nbOfDoors;              // nb of doors and thus codes in the level
-    private bool webGame;               // whether we are playing the webbased game
-    public float waitTime;              // time between code display pulses
-    private static Color[] colors = { Color.blue, Color.green, Color.red, Color.magenta, Color.yellow, Color.cyan, Color.white };
-
+    private static Color[] colors = { Color.blue, Color.green, Color.red, Color.magenta, Color.yellow, Color.cyan };
+    private int[,] codes;              // Code for each door
+    private GameObject[] codeZones;    // the set of code zones
+    private int codeLength;            // Length of the codes
+    private int nbOfDoors;             // nb of doors and thus codes in the level
+    private bool[] won;                   // whether each player has reached the end of the maze
+    public bool webGame;               // whether we are playing the webbased/screenbased game
+    public float waitTime;             // time between code display pulses
+    
     private int startTime = 0;
     private int currentTime = 0;
     private bool isTimerRunning = false;
@@ -33,6 +32,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        won = new bool[2];
+        won[0] = false;
+        won[1] = false;
         setCodeLength(3);
         generateCodes();
         nbOfDoors = codeZones.Length;
@@ -75,8 +77,6 @@ public class GameManager : MonoBehaviour
         return webGame;
     }
 
-    // ------- METHODS FOR CODE MANAGEMENT ------- //
-
     public void setNbOfDoors(int nb)
     {
         nbOfDoors = nb;
@@ -86,6 +86,18 @@ public class GameManager : MonoBehaviour
     {
         return nbOfDoors;
     }
+
+    public void playerWon(int id)
+    {
+        won[id-1] = true;
+        if(won[0] && won[1])
+        {
+            Win();
+        }
+    }
+
+    // ------- METHODS FOR CODE MANAGEMENT ------- //
+
 
     // Method to set a new code length
     public void setCodeLength(int length)
@@ -144,4 +156,8 @@ public class GameManager : MonoBehaviour
 
 
     // ------- END OF METHODS FOR CODE MANAGEMENT ------- //
+
+
+
+
 }
