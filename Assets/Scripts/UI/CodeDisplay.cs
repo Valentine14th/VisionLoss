@@ -59,9 +59,11 @@ public class CodeDisplay : MonoBehaviour
     // coroutine to display the code on UI
     private IEnumerator displaySlowly(float waitTime, Color color, int[] code)
     {
+        Debug.Log("display slowly is called");
         yield return new WaitForSeconds(waitTime/4);
-        for (int i = 0; i < GameManager.GetComponent<GameManager>().getCodeLength(); ++i)
+        for (int i = 0; i < code.Length; ++i)
         {
+            Debug.Log("digit " + i);
             Image buttonImage = buttons[code[i]].GetComponent<Image>();
             Color initial = buttonImage.color;
             buttonImage.color = color;
@@ -74,6 +76,7 @@ public class CodeDisplay : MonoBehaviour
     // opens up the code display in display mode and displays the given code once
     public void displayCode(int[] code, Color color)
     {
+        Debug.Log("display code is called and color is " + color);
         if (!gameObject.activeSelf)
         {
             gameObject.SetActive(true);
@@ -136,7 +139,7 @@ public class CodeDisplay : MonoBehaviour
                 {
                     Debug.Log("code is wrong");
                     enteredCode.Clear();
-                    if (true) //gameManager.isWebGame()
+                    if (gameManager.isWebGame()) 
                     {
                         StartCoroutine(displayRetry());
                     }
