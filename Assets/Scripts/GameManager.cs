@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private int[] player2EnteredCode;   // The code the second player currently entered
     private GameObject[] codeZones;     // the set of code zones
     private int codeLength;             // Length of the codes
-    public int nbOfDoors;               // nb of doors and thus codes in the level
+    private int nbOfDoors;               // nb of doors and thus codes in the level
     private bool webGame;               // whether we are playing the webbased game
     public float waitTime;              // time between code display pulses
 
@@ -36,12 +36,13 @@ public class GameManager : MonoBehaviour
     // ------- END OF VARIABLES FOR CODE MANAGEMENT ------- //
 
 
-
     // Start is called before the first frame update
     void Start()
     {
-        setCodeLength(6);
+        setCodeLength(3);
         generateCodes();
+        nbOfDoors = codeZones.Length;
+        Debug.Log("nb of doors is: " + nbOfDoors);
         
     }
 
@@ -111,7 +112,6 @@ public class GameManager : MonoBehaviour
                 codes[j, i] = Random.Range(0, Config.CELLULO_KEYS);
             }
         }
-
 
         // assign them to code zones and doors
         for (int i=0; i < nbOfDoors; ++i)

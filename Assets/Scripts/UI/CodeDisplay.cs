@@ -60,6 +60,7 @@ public class CodeDisplay : MonoBehaviour
     // coroutine to display the code on UI
     private IEnumerator displaySlowly(float waitTime, Color color, int[] code)
     {
+        yield return new WaitForSeconds(waitTime/4);
         for (int i = 0; i < GameManager.GetComponent<GameManager>().getCodeLength(); ++i)
         {
             Debug.Log("code digit " + i);
@@ -98,9 +99,11 @@ public class CodeDisplay : MonoBehaviour
         currentDoorZone = doorZone;
         gameObject.SetActive(true);
         clearButtons();
+        clearCode();
+        
 
-        if (!enterCodeMode)
-        {
+        //if (!enterCodeMode)
+        //{
             foreach (var button in buttons)
             {
                 enterCodeMode = true;
@@ -109,7 +112,7 @@ public class CodeDisplay : MonoBehaviour
                 button.GetComponent<Image>().color = color;
             }
 
-        }
+        //}
         
     }
 
