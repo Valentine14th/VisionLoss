@@ -78,6 +78,7 @@ public class CodeDisplay : MonoBehaviour
         {
             gameObject.SetActive(true);
             clearButtons();
+            retry.SetActive(false);
 
             if (enterCodeMode)
             {
@@ -103,6 +104,7 @@ public class CodeDisplay : MonoBehaviour
             gameObject.SetActive(true);
             clearButtons();
             clearCode();
+            retry.SetActive(false);
 
             foreach (var button in buttons)
             {

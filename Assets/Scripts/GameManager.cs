@@ -9,10 +9,10 @@ public class GameManager : MonoBehaviour
 
     // ------- VARIABLES FOR CODE MANAGEMENT ------- //
 
-    private static Color[] colors = { Color.blue, Color.green, Color.red, Color.magenta, Color.yellow, Color.cyan };
+    private static Color[] colors = { Color.blue, Color.green, Color.red, Color.magenta, Color.yellow, Color.cyan, new Color(1, 0.5f, 0.5f, 1)};
     private int[,] codes;              // Code for each door
     private GameObject[] codeZones;    // the set of code zones
-    private int codeLength;            // Length of the codes
+    public int codeLength;            // Length of the codes
     private int nbOfDoors;             // nb of doors and thus codes in the level
     private bool[] won;                   // whether each player has reached the end of the maze
     public bool webGame;               // whether we are playing the webbased/screenbased game
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         won = new bool[2];
         won[0] = false;
         won[1] = false;
-        setCodeLength(3);
+        //setCodeLength(3);
         generateCodes();
         nbOfDoors = codeZones.Length;
         Debug.Log("nb of doors is: " + nbOfDoors);
