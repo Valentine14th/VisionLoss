@@ -11,11 +11,13 @@ public enum InputKeyboard{
 public class PlayerBehavior : AgentBehaviour
 {
     public int playerID; // PLayer ID, 1 or 2
-    public GameObject gameManager; // Game manager object
+    public GameObject GameManager; // Game manager object
+    private GameManager gameManager;
     private Zone currentZone; // The current zone the player is in, none, the code transmission zone, or the door zone
     private bool correctCodeEntered; // Whether the correct code has been entered yet or not
     private GameObject codeZone; // Zone where the code is shown
     private GameObject doorZone; // Zone where the code is read
+    private List<int> enteredCode; // the code currently entered by the user
 
     public float linSpeed; // Linear speed to move to the center of a zone
     public float angSpeed; // Angular speed to move to the center of a zone
@@ -31,30 +33,41 @@ public class PlayerBehavior : AgentBehaviour
         Door // Door zone
     }
 
+    // Enum to specify what is returned to the cellulos' scripts
+    public enum CodeCheckReturn
+    {
+        Incomplete,
+        Wrong,
+        Correct
+    }
+
     void Start()
     {
-        codeZone = GameObject.FindGameObjectWithTag("player" + playerID + "code");
-        doorZone = GameObject.FindGameObjectWithTag("player" + playerID + "door");
         agent.SetCasualBackdriveAssistEnabled(true);
+        gameManager = GameManager.GetComponent<GameManager>();
+
     }
 
     void OnCollisionEnter(Collision collisionInfo)
     {
-        if(collisionInfo.collider.tag == "CodeZone" || collisionInfo.collider == doorZone)
+        if (!gameManager.isWebGame())
         {
-            // Move the cellulo to the center of the zone
-            agent.isMoved = false;
-            agent.SetCasualBackdriveAssistEnabled(false);
-            //Vector3 position = collisionInfo.collider.transform.position;
-            //agent._celluloRobot.SetGoalPose(position.x, position.z, 0, linSpeed, angSpeed);
-            //StartCoroutine(waitUntilAtSpot(position.x, position.z, 0));
-            if(collisionInfo.collider.tag == "CodeZone")
+            if (collisionInfo.collider.tag == "CodeZone" || collisionInfo.collider == doorZone)
             {
-                currentZone = Zone.Code;
-            }
-            else if(!correctCodeEntered)
-            {
-                currentZone = Zone.Door;
+                // Move the cellulo to the center of the zone
+                agent.isMoved = false;
+                agent.SetCasualBackdriveAssistEnabled(false);
+                //Vector3 position = collisionInfo.collider.transform.position;
+                //agent._celluloRobot.SetGoalPose(position.x, position.z, 0, linSpeed, angSpeed);
+                //StartCoroutine(waitUntilAtSpot(position.x, position.z, 0));
+                if (collisionInfo.collider.tag == "CodeZone")
+                {
+                    currentZone = Zone.Code;
+                }
+                else if (!correctCodeEntered)
+                {
+                    currentZone = Zone.Door;
+                }
             }
         }
     }
@@ -67,6 +80,7 @@ public class PlayerBehavior : AgentBehaviour
 
     void FixedUpdate()
     {
+        /*
         if(currentZone == Zone.None)
         {
             // Code to flee walls
@@ -85,13 +99,14 @@ public class PlayerBehavior : AgentBehaviour
             agent.SetCasualBackdriveAssistEnabled(true); // Enable the backdrive assist
             currentZone = Zone.None; // Reset the zone
         }
+        */
     }
 
     // Method to show the code on the cellulo
-    private void showCode()
+    public void showCode(int[] code, Color color)
     {
-        Color color = (playerID == 1) ? Color.red : Color.blue; // la couleur doit plutôt dépendre de la porte associée
-        int[] code = gameManager.GetComponent<GameManager>().getCode(playerID);
+        // TODO: show correct orientation, or move to correct orientation
+
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
@@ -104,21 +119,26 @@ public class PlayerBehavior : AgentBehaviour
     // Coroutine to wait for a given amount of time
     private IEnumerator waitForTime()
     {
-        yield return new WaitForSeconds(gameManager.GetComponent<GameManager>().waitTime);
+        yield return new WaitForSeconds(gameManager.waitTime);
     }
 
     // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
-    private void readCode()
+    public bool readCode(int[] correctCode, Color color)
     {
-        int length = gameManager.GetComponent<GameManager>().getCodeLength();
-        GameManager.CodeCheckReturn returnCode = GameManager.CodeCheckReturn.Incomplete;
+        //light up led zero to know orientation of code and color of door
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, color, 0);
+        //TODO: play sound
+
+        // get the code the player enters on the cellulo leds
+        int length = gameManager.getCodeLength();
+        CodeCheckReturn returnCode = CodeCheckReturn.Incomplete;
         for(int i = 0; i < length; ++i)
         {
             bool found = false;
             int currentKey = -1;
             while(!found)
             {
-                for(int j = 0; j < 6; ++j)
+                for(int j = 0; j < Config.CELLULO_KEYS; ++j)
                 {
                     if(agent._celluloRobot.GetTouch(j) == Touch.TouchBegan)
                     {
@@ -128,21 +148,25 @@ public class PlayerBehavior : AgentBehaviour
                     }
                 }
             }
-            //returnCode = gameManager.GetComponent<GameManager>().enterKeyStroke(playerID, currentKey);
+            // add digit to enteredCode and check for correctness
+            returnCode = enterKeyStroke(currentKey, correctCode);
             StartCoroutine(waitForRelease(currentKey));
         }
-        if(returnCode == GameManager.CodeCheckReturn.Correct)
+        if(returnCode == CodeCheckReturn.Correct)
         {
             correctCodeEntered = true;
             agent.SetVisualEffect(VisualEffect.VisualEffectPulse, Color.green, 0);
+            //TODO: play sound;
         }
         else
         {
             correctCodeEntered = false;
             agent.SetVisualEffect(VisualEffect.VisualEffectPulse, Color.red, 0);
+            //TODO: play sound;
         }
         StartCoroutine(waitForTime());
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+        return correctCodeEntered;
     }
 
     // Coroutine which waits until a given key is released
@@ -150,6 +174,53 @@ public class PlayerBehavior : AgentBehaviour
     {
         yield return new WaitUntil(() => agent._celluloRobot.GetTouch(key) == Touch.TouchReleased);
     }
+
+  
+    // Method to check if the entered code of the player is correct, assumes the entered code is already long enough
+    private bool checkCode(int[] code)
+    {
+        for(int i = 0; i < gameManager.getCodeLength(); ++i)
+        {
+            if(enteredCode[i] != code[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+ 
+    // Method to reset the codes entered by a given player
+    private void resetEnteredCode()
+    {
+        enteredCode.Clear();
+
+    }
+
+    // Method to register a key stroke in a given code. This returns Correct if the code is correct, Wrong if the code is wrong (as well
+    // as resetting the entered code) and Incomplete if the code has not been fully sent yet
+    private CodeCheckReturn enterKeyStroke(int key, int[] code)
+    {
+        enteredCode.Add(key);
+        if (enteredCode.Count == code.Length)
+        {
+            if (checkCode(code))
+            {
+                resetEnteredCode();
+                return CodeCheckReturn.Correct;
+            }
+            else
+            {
+                resetEnteredCode();
+                return CodeCheckReturn.Wrong;
+            }
+        }
+        else {
+            return CodeCheckReturn.Incomplete;
+        }  
+    }
+
+    // MOTION 
 
     public override Steering GetSteering()
     {

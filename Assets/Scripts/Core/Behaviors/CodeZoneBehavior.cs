@@ -45,14 +45,18 @@ public class CodeZoneBehavior : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         Debug.Log("trigger code zone");
-        if(true)// if (gameManager.isWebGame())
+        GameObject cellulo = other.transform.parent.gameObject;
+        if (cellulo.tag == "Cellulo")
         {
-            display.GetComponent<CodeDisplay>().displayCode(code, color);
-            
-        }
-        else
-        {
-            //TO DO, display on cellulos
+            if (gameManager.isWebGame()) // if (gameManager.isWebGame())
+            {
+                display.GetComponent<CodeDisplay>().displayCode(code, color);
+
+            }
+            else
+            {
+                cellulo.GetComponent<PlayerBehavior>().showCode(code, color);
+            }
         }
 
     }

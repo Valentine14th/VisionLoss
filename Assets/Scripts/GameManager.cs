@@ -14,9 +14,10 @@ public class GameManager : MonoBehaviour
     private int[] player2EnteredCode;   // The code the second player currently entered
     private GameObject[] codeZones;     // the set of code zones
     private int codeLength;             // Length of the codes
-    private int nbOfDoors;               // nb of doors and thus codes in the level
+    private int nbOfDoors;              // nb of doors and thus codes in the level
     private bool webGame;               // whether we are playing the webbased game
     public float waitTime;              // time between code display pulses
+    private static Color[] colors = { Color.blue, Color.green, Color.red, Color.magenta, Color.yellow, Color.cyan, Color.white };
 
     private int startTime = 0;
     private int currentTime = 0;
@@ -25,13 +26,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject winDisplay;
 
-    // Enum to specify what is returned to the cellulos' scripts
-    public enum CodeCheckReturn
-    {
-        Incomplete,
-        Wrong,
-        Correct
-    }
 
     // ------- END OF VARIABLES FOR CODE MANAGEMENT ------- //
 
@@ -43,6 +37,7 @@ public class GameManager : MonoBehaviour
         generateCodes();
         nbOfDoors = codeZones.Length;
         Debug.Log("nb of doors is: " + nbOfDoors);
+        webGame = true; // TODO: make it possible to choose
         
     }
 
@@ -75,6 +70,11 @@ public class GameManager : MonoBehaviour
         winDisplay.SetActive(true);
     }
 
+    public bool isWebGame()
+    {
+        return webGame;
+    }
+
     // ------- METHODS FOR CODE MANAGEMENT ------- //
 
     public void setNbOfDoors(int nb)
@@ -93,10 +93,6 @@ public class GameManager : MonoBehaviour
         codeLength = length;
     }
 
-    public bool isWebGame()
-    {
-        return webGame;
-    }
 
     // Method to generate random codes of the given length and bind them to code zones 
     private void generateCodes()
@@ -114,33 +110,20 @@ public class GameManager : MonoBehaviour
         }
 
         // assign them to code zones and doors
+        if(nbOfDoors > colors.Length)
+        {
+            Debug.LogWarning("not enough colors");
+            return;
+        }
         for (int i=0; i < nbOfDoors; ++i)
         {
             CodeZoneBehavior zone = codeZones[i].GetComponent<CodeZoneBehavior>();
 
             zone.setCode(getCode(i));
-            zone.setColor(Random.ColorHSV());
+            zone.setColor(colors[i]);
         }
 
     }
-
-    /*
-    // Method to reset the codes entered by a given player
-    public void resetEnteredCode(int player)
-    {
-        for(int i = 0; i < codeLength; ++i)
-        {
-            if(player == 1)
-            {
-                player1EnteredCode[i] = 0;
-            }
-            else
-            {
-                player2EnteredCode[i] = 0;
-            }
-        }
-    }
-    */
 
     // Method to return the code from a code zone
     public int[] getCode(int zone)
@@ -159,112 +142,6 @@ public class GameManager : MonoBehaviour
         return codeLength;
     }
 
-    /*
-    // Method to check if the entered code of the player is correct
-    public bool checkCode(int player)
-    {
-        for(int i = 0; i < codeLength; ++i)
-        {
-            if(player == 1)
-            {
-                if(player1Code[i] != player1EnteredCode[i])
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if(player2Code[i] != player2EnteredCode[i])
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    */
-
-    /*
-    // Method to register a key stroke in a given code. This returns Correct if the code is correct, Wrong if the code is wrong (as well
-    // as resetting the entered code) and Incomplete if the code has not been fully sent yet
-    public CodeCheckReturn enterKeyStroke(int player, int key)
-    {
-        for(int i = 0; i < codeLength; ++i)
-        {
-            if(player == 1)
-            {
-                if(player1EnteredCode[i] == 0)
-                {
-                    player1EnteredCode[i] = key;
-                    if(i == codeLength - 1)
-                    {
-                        if(checkCode(1))
-                        {
-                            onCorrectCode(1);
-                            return CodeCheckReturn.Correct;
-                        }
-                        else
-                        {
-                            resetEnteredCode(1);
-                            return CodeCheckReturn.Wrong;
-                        }
-                    }
-                    else
-                    {
-                        return CodeCheckReturn.Incomplete;
-                    }
-                }
-                else if(i == codeLength - 1)
-                {
-                    return CodeCheckReturn.Correct;
-                }
-            }
-            else
-            {
-                if(player2EnteredCode[i] == 0)
-                {
-                    player2EnteredCode[i] = key;
-                    if(i == codeLength - 1)
-                    {
-                        if(checkCode(2))
-                        {
-                            onCorrectCode(2);
-                            return CodeCheckReturn.Correct;
-                        }
-                        else
-                        {
-                            resetEnteredCode(2);
-                            return CodeCheckReturn.Wrong;
-                        }
-                    }
-                    else
-                    {
-                        return CodeCheckReturn.Incomplete;
-                    }
-                }
-                else if(i == codeLength - 1)
-                {
-                    return CodeCheckReturn.Correct;
-                }
-            }
-        }
-        return CodeCheckReturn.Incomplete;
-        
-    }
-    */
-
-    // Method called when a given player has entered the correct code
-    public void onCorrectCode(int player)
-    {
-        if(player == 1)
-        {
-            // ######## TODO
-        }
-        else
-        {
-            // ######## TODO
-        }
-    }
 
     // ------- END OF METHODS FOR CODE MANAGEMENT ------- //
 }

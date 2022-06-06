@@ -21,7 +21,7 @@ public class DoorZoneBehavior : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    { 
 
     }
 
@@ -38,7 +38,7 @@ public class DoorZoneBehavior : MonoBehaviour
         Debug.Log("coolider is: " + cellulo.name);
         if(cellulo.tag == "Cellulo")
         {
-            if (true) //gameManager.isWebGame()
+            if (gameManager.isWebGame()) 
             {
                 Debug.Log("is it is a cellulo");
                 codeDisplay.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor(), gameObject);
@@ -46,6 +46,10 @@ public class DoorZoneBehavior : MonoBehaviour
             else
             {
                 //TODO handle when with real cellulos
+                if(cellulo.GetComponent<PlayerBehavior>().readCode(getCorrectCode(), codeZoneScript.getColor()))
+                {
+                    gameObject.SetActive(false);
+                }
             }
 
 

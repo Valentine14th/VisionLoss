@@ -43,7 +43,6 @@ public class CodeDisplay : MonoBehaviour
             */
             buttons = GameObject.FindGameObjectsWithTag("CodeButton");
             clear = GameObject.Find("Clear");
-            //retry = GameObject.Find("Retry");
             initialized = true;
             gameManager = GameManager.GetComponent<GameManager>();
 
@@ -63,7 +62,6 @@ public class CodeDisplay : MonoBehaviour
         yield return new WaitForSeconds(waitTime/4);
         for (int i = 0; i < GameManager.GetComponent<GameManager>().getCodeLength(); ++i)
         {
-            Debug.Log("code digit " + i);
             Image buttonImage = buttons[code[i]].GetComponent<Image>();
             Color initial = buttonImage.color;
             buttonImage.color = color;
@@ -76,34 +74,36 @@ public class CodeDisplay : MonoBehaviour
     // opens up the code display in display mode and displays the given code once
     public void displayCode(int[] code, Color color)
     {
-        gameObject.SetActive(true);
-        clearButtons();
-       
-        if (enterCodeMode)
+        if (!gameObject.activeSelf)
         {
-            enterCodeMode = false;
-            clear.SetActive(false);
-            foreach (var button in buttons)
-            {
-                button.GetComponent<Button>().enabled = false;
-            }
-        }
+            gameObject.SetActive(true);
+            clearButtons();
 
-        StartCoroutine(displaySlowly(GameManager.GetComponent<GameManager>().waitTime, color, code));
+            if (enterCodeMode)
+            {
+                enterCodeMode = false;
+                clear.SetActive(false);
+                foreach (var button in buttons)
+                {
+                    button.GetComponent<Button>().enabled = false;
+                }
+            }
+
+            StartCoroutine(displaySlowly(GameManager.GetComponent<GameManager>().waitTime, color, code));
+        }
     }
 
     // opens up the code display in enterCode mode 
     public void enterCode(Color color, GameObject doorZone)
     {
-        Debug.Log("enterCode called");
-        currentDoorZone = doorZone;
-        gameObject.SetActive(true);
-        clearButtons();
-        clearCode();
-        
+        if (!gameObject.activeSelf)
+        {
+            Debug.Log("enterCode called");
+            currentDoorZone = doorZone;
+            gameObject.SetActive(true);
+            clearButtons();
+            clearCode();
 
-        //if (!enterCodeMode)
-        //{
             foreach (var button in buttons)
             {
                 enterCodeMode = true;
@@ -111,9 +111,7 @@ public class CodeDisplay : MonoBehaviour
                 button.GetComponent<Button>().enabled = true;
                 button.GetComponent<Image>().color = color;
             }
-
-        //}
-        
+        }
     }
 
     private IEnumerator displayRetry()
@@ -163,7 +161,7 @@ public class CodeDisplay : MonoBehaviour
             // close display and open door
             gameObject.SetActive(false);
             currentDoorZone.SetActive(false);
-            //play a sound?
+            //TODO: play a sound?
 
         }
 
