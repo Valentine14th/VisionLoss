@@ -24,10 +24,14 @@ public class PlayerBehavior : AgentBehaviour
     private bool hasStarted; // Whether the cellulo is at the starting position or not
     private bool walking; // Whether the cellulo is walking to the starting positio
 
+    private bool codeIsCorrect;
+
     public float startingPosX;
     public float startingPosY;
 
-    private int[] enteredCode;
+    private int currentLength = 999;
+
+    private List<int> enteredCode;
 
     void Start()
     {
@@ -116,26 +120,45 @@ public class PlayerBehavior : AgentBehaviour
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         int length = correctCode.Length;
+        enteredCode = new List<int>();
+        currentLength = length;
+        while(enteredCode.Count < length)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
         for(int i = 0; i < length; ++i)
         {
-            bool found = false;
-            int currentKey = -1;
-            while(!found)
+            if(enteredCode[i] != correctCode[i])
             {
-                for(int j = 0; j < Config.CELLULO_KEYS; ++j)
+                codeIsCorrect = false;
+                break;
+            }
+        }
+        agent.SetVisualEffect(VisualEffect.VisualEffectPulse, (codeIsCorrect) ? Color.green : Color.red, 0);
+        // TODO: play sound
+        yield return new WaitForSeconds(gameManager.waitTime);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
+    }
+
+    void OnTouchBegan()
+    {
+        bool found = false;
+        int currentKey = -1;
+        while(!found)
+        {
+            for(int j = 0; j < Config.CELLULO_KEYS; ++j)
+            {
+                if(agent._celluloRobot.GetTouch(j) == Touch.TouchBegan)
                 {
-                    if(agent._celluloRobot.GetTouch(j) == Touch.TouchBegan)
-                    {
-                        found = true;
-                        currentKey = j;
-                        break;
-                    }
+                    found = true;
+                    currentKey = j;
+                    break;
                 }
             }
-            // add digit to enteredCode and check for correctness
-            enteredCode[i] = currentKey;
-            yield return new WaitForSeconds(1f);
         }
+        // add digit to enteredCode and check for correctness
+        enteredCode.Add(currentKey);
     }
 
     // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
@@ -148,23 +171,8 @@ public class PlayerBehavior : AgentBehaviour
 
         // get the code the player enters on the cellulo leds
         int length = correctCode.Length;
-        enteredCode = new int[length];
         StartCoroutine(readCodeCoroutine(correctCode, color));
-        bool codeIsCorrect = true;
-        for(int i = 0; i < length; ++i)
-        {
-            if(enteredCode[i] != correctCode[i])
-            {
-                codeIsCorrect = false;
-                break;
-            }
-        }
-        agent.SetVisualEffect(VisualEffect.VisualEffectPulse, (codeIsCorrect) ? Color.green : Color.red, 0);
-        // TODO: play sound
-        StartCoroutine(waitForTime());
-        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
-        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
-        return codeIsCorrect;
+        return true;
     }
 
     // MOTION 
