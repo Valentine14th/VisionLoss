@@ -28,6 +28,8 @@ public class PlayerBehavior : AgentBehaviour
     public float startingPosX;
     public float startingPosY;
 
+    private int[] enteredCode;
+
     void Start()
     {
         hasStarted = false;
@@ -64,6 +66,15 @@ public class PlayerBehavior : AgentBehaviour
         if(!hasStarted)
         {
             return;
+        }
+        if(Math.Abs(agent._celluloRobot.GetTheta()) > epsilon)
+        {
+            agent._celluloRobot.SetGoalOrientation(0, 50);
+            while(!atCorrectAngle)
+            {
+                StartCoroutine(waitForShort());
+            }
+            atCorrectAngle = false;
         }
         StartCoroutine(showCodeCoroutine(code, color));
     }
@@ -110,32 +121,9 @@ public class PlayerBehavior : AgentBehaviour
         }
     }
 
-    // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
-    public bool readCode(int[] correctCode, Color color)
+    private IEnumerator readCodeCoroutine(int[] correctCode, Color color)
     {
-        if(!hasStarted)
-        {
-            return false;
-        }
-        // Turn cellulo to correct orientation
-        if(Math.Abs(agent._celluloRobot.GetTheta()) > epsilon)
-        {
-            agent._celluloRobot.SetGoalOrientation(0, 50);
-            while(!atCorrectAngle)
-            {
-                StartCoroutine(waitForShort());
-            }
-            atCorrectAngle = false;
-        }
-
-
-        //light up led zero to know orientation of code and color of door
-        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, color, 0);
-        //TODO: play sound
-
-        // get the code the player enters on the cellulo leds
         int length = correctCode.Length;
-        int[] enteredCode = new int[length];
         for(int i = 0; i < length; ++i)
         {
             bool found = false;
@@ -154,8 +142,41 @@ public class PlayerBehavior : AgentBehaviour
             }
             // add digit to enteredCode and check for correctness
             enteredCode[i] = currentKey;
-            StartCoroutine(waitForRelease(currentKey));
+            yield return new WaitUntil(() => agent._celluloRobot.GetTouch(currentKey) == Touch.TouchReleased);
         }
+    }
+
+    private IEnumerator showStartCode(Color color)
+    {
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, color, 0);
+        yield return new WaitForSeconds(gameManager.waitTime);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+    }
+
+    // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
+    public bool readCode(int[] correctCode, Color color)
+    {
+        if(!hasStarted)
+        {
+            return false;
+        }
+        // Turn cellulo to correct orientation
+        if(Math.Abs(agent._celluloRobot.GetTheta()) > epsilon)
+        {
+            agent._celluloRobot.SetGoalOrientation(0, 50);
+            while(!atCorrectAngle)
+            {
+                StartCoroutine(waitForShort());
+            }
+            atCorrectAngle = false;
+        }
+
+        StartCoroutine(showStartCode(color));
+
+        // get the code the player enters on the cellulo leds
+        int length = correctCode.Length;
+        enteredCode = new int[length];
+        StartCoroutine(readCodeCoroutine(correctCode, color));
         bool codeIsCorrect = true;
         for(int i = 0; i < length; ++i)
         {
@@ -170,12 +191,6 @@ public class PlayerBehavior : AgentBehaviour
         StartCoroutine(waitForTime());
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         return codeIsCorrect;
-    }
-
-    // Coroutine which waits until a given key is released
-    private IEnumerator waitForRelease(int key)
-    {
-        yield return new WaitUntil(() => agent._celluloRobot.GetTouch(key) == Touch.TouchReleased);
     }
 
     // MOTION 
