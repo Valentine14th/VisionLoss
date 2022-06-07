@@ -54,6 +54,7 @@ public class PlayerBehavior : AgentBehaviour
             agent.ActivateDirectionalHapticFeedback(); // TODO test this, should work with walls directly, otherwise activate normal wall response mode
             agent.isMoved = true;
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+            agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
         }
     }
 
@@ -72,14 +73,6 @@ public class PlayerBehavior : AgentBehaviour
 
     private IEnumerator showCodeCoroutine(int[] code, Color color)
     {
-        Debug.Log("Coroutine called. Setting cellulo orientation to 180");
-        agent._celluloRobot.SetGoalOrientation(180, 50);
-        while(Math.Abs(180 - agent._celluloRobot.GetTheta()) > epsilon)
-        {
-            yield return new WaitForSeconds(0.1f);
-            Debug.Log("Waiting for orientation to be fixed");
-        }
-        Debug.Log("Showing code");
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
@@ -118,8 +111,6 @@ public class PlayerBehavior : AgentBehaviour
 
     private IEnumerator readCodeCoroutine(int[] correctCode, Color color)
     {
-        agent._celluloRobot.SetGoalOrientation(180, 50);
-        yield return new WaitUntil(() => Math.Abs(180 - agent._celluloRobot.GetTheta()) <= epsilon);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, color, 0);
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
