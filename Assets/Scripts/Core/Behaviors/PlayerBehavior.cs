@@ -13,7 +13,6 @@ public class PlayerBehavior : AgentBehaviour
     public int playerID; // PLayer ID, 1 or 2
     public GameObject GameManager; // Game manager object
     private GameManager gameManager;
-    private Zone currentZone; // The current zone the player is in, none, the code transmission zone, or the door zone
 
     public float linSpeed; // Linear speed to move to the center of a zone
     public float angSpeed; // Angular speed to move to the center of a zone
@@ -23,45 +22,38 @@ public class PlayerBehavior : AgentBehaviour
     private bool atCorrectAngle; // Whether the cellulo is already at the correct angle
     public float wallRange; // Range at which walls are detected
 
-    // Enum which describes in which zone the player is currently in
-    private enum Zone
-    {
-        None, // No zone
-        Code, // Code zone
-        Door // Door zone
-    }
+    private bool hasStarted; // Whether the cellulo is at the starting position or not
+    private bool walking; // Whether the cellulo is walking to the starting positio
+
+    public float startingPosX;
+    public float startingPosY;
 
     void Start()
     {
-        agent.SetCasualBackdriveAssistEnabled(true); // TODO remove this?
+        hasStarted = false;
+        walking = false;
         gameManager = GameManager.GetComponent<GameManager>();
-
-        agent.ActivateDirectionalHapticFeedback(); // TODO test this, should work with walls directly, otherwise activate normal wall response mode
-
     }
 
     void FixedUpdate()
     {
         /*
-        if(currentZone == Zone.None)
+        if(!hasStarted && !walking)
         {
-            // Code to flee walls
-        }
-        else
+            agent._celluloRobot.SetGoalPosition(startingPosX, startingPosY, agent.maxAccel);
+            agent.isMoved = false;
+            walking = true;
+            agent.SetVisualEffect(VisualEffect.VisualEffectPulse, Color.yellow, 0);
+        }*/
+        if(!hasStarted)
         {
-            if(currentZone == Zone.Code)
-            {
-                showCode();
-            }
-            else
-            {
-                readCode();
-            }
-            agent.isMoved = true; // Allow the cellulo to be moved
-            agent.SetCasualBackdriveAssistEnabled(true); // Enable the backdrive assist
-            currentZone = Zone.None; // Reset the zone
+            hasStarted = true;
+            walking = false;
+            agent.SetCasualBackdriveAssistEnabled(true); // TODO remove this?
+            agent.ActivateDirectionalHapticFeedback(); // TODO test this, should work with walls directly, otherwise activate normal wall response mode
+            agent.isMoved = true;
+            agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         }
-        */
     }
 
     // Method to show the code on the cellulo
@@ -69,12 +61,20 @@ public class PlayerBehavior : AgentBehaviour
     {
         // TODO: show correct orientation, or move to correct orientation
 
+        if(!hasStarted)
+        {
+            return;
+        }
+        StartCoroutine(showCodeCoroutine(code, color));
+    }
 
+    private IEnumerator showCodeCoroutine(int[] code, Color color)
+    {
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
             agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, color, code[i]);
-            StartCoroutine(waitForTime());
+            yield return new WaitForSeconds(gameManager.waitTime);
         }
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
     }
@@ -95,12 +95,28 @@ public class PlayerBehavior : AgentBehaviour
     // Goal angle reached
     public void OnGoalPoseReached()
     {
-        atCorrectAngle = true;
+        if(!hasStarted)
+        {
+            hasStarted = true;
+            walking = false;
+            agent.SetCasualBackdriveAssistEnabled(true); // TODO remove this?
+            agent.ActivateDirectionalHapticFeedback(); // TODO test this, should work with walls directly, otherwise activate normal wall response mode
+            agent.isMoved = true;
+            agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+        }
+        else
+        {
+            atCorrectAngle = true;
+        }
     }
 
     // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
     public bool readCode(int[] correctCode, Color color)
     {
+        if(!hasStarted)
+        {
+            return false;
+        }
         // Turn cellulo to correct orientation
         if(Math.Abs(agent._celluloRobot.GetTheta()) > epsilon)
         {
@@ -188,6 +204,11 @@ public class PlayerBehavior : AgentBehaviour
         }
         else
         {
+            if(!hasStarted)
+            {
+                steering.linear = Vector3.zero;
+                return steering;
+            }
             List<Vector3> walls = new List<Vector3>();
 
             // TODO potentially remove this. Makes the cellulo flee the walls in a given radius
