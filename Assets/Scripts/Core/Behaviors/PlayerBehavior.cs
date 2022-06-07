@@ -26,8 +26,12 @@ public class PlayerBehavior : AgentBehaviour
 
     private bool codeIsCorrect;
 
+    private bool setLed = false;
+
     public float startingPosX;
     public float startingPosY;
+
+    private int counter = 0;
 
     private int currentLength = 999;
 
@@ -59,6 +63,11 @@ public class PlayerBehavior : AgentBehaviour
             agent.isMoved = true;
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
             agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
+        }
+        if (agent.isConnected && !setLed) { 
+            agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+            agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
+            setLed = true;
         }
     }
 
@@ -143,6 +152,7 @@ public class PlayerBehavior : AgentBehaviour
 
     void OnTouchBegan()
     {
+        Debug.Log("touch began");
         bool found = false;
         int currentKey = -1;
         while(!found)
@@ -153,6 +163,7 @@ public class PlayerBehavior : AgentBehaviour
                 {
                     found = true;
                     currentKey = j;
+                    Debug.Log("key pressed " + currentKey);
                     break;
                 }
             }
