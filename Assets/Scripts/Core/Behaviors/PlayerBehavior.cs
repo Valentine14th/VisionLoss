@@ -19,7 +19,6 @@ public class PlayerBehavior : AgentBehaviour
 
     public float epsilon; // Precision of position checks
     public InputKeyboard inputKeyboard; 
-    private bool atCorrectAngle; // Whether the cellulo is already at the correct angle
     public float wallRange; // Range at which walls are detected
 
     private bool hasStarted; // Whether the cellulo is at the starting position or not
@@ -67,20 +66,13 @@ public class PlayerBehavior : AgentBehaviour
         {
             return;
         }
-        if(Math.Abs(agent._celluloRobot.GetTheta()) > epsilon)
-        {
-            agent._celluloRobot.SetGoalOrientation(0, 50);
-            while(!atCorrectAngle)
-            {
-                StartCoroutine(waitForShort());
-            }
-            atCorrectAngle = false;
-        }
         StartCoroutine(showCodeCoroutine(code, color));
     }
 
     private IEnumerator showCodeCoroutine(int[] code, Color color)
     {
+        agent._celluloRobot.SetGoalOrientation(0, 50);
+        yield return new WaitUntil(() => Math.Abs(agent._celluloRobot.GetTheta()) <= epsilon);
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
@@ -115,14 +107,15 @@ public class PlayerBehavior : AgentBehaviour
             agent.isMoved = true;
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         }
-        else
-        {
-            atCorrectAngle = true;
-        }
     }
 
     private IEnumerator readCodeCoroutine(int[] correctCode, Color color)
     {
+        agent._celluloRobot.SetGoalOrientation(0, 50);
+        yield return new WaitUntil(() => Math.Abs(agent._celluloRobot.GetTheta()) <= epsilon);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, color, 0);
+        yield return new WaitForSeconds(gameManager.waitTime);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         int length = correctCode.Length;
         for(int i = 0; i < length; ++i)
         {
@@ -146,13 +139,6 @@ public class PlayerBehavior : AgentBehaviour
         }
     }
 
-    private IEnumerator showStartCode(Color color)
-    {
-        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, color, 0);
-        yield return new WaitForSeconds(gameManager.waitTime);
-        agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
-    }
-
     // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
     public bool readCode(int[] correctCode, Color color)
     {
@@ -160,18 +146,6 @@ public class PlayerBehavior : AgentBehaviour
         {
             return false;
         }
-        // Turn cellulo to correct orientation
-        if(Math.Abs(agent._celluloRobot.GetTheta()) > epsilon)
-        {
-            agent._celluloRobot.SetGoalOrientation(0, 50);
-            while(!atCorrectAngle)
-            {
-                StartCoroutine(waitForShort());
-            }
-            atCorrectAngle = false;
-        }
-
-        StartCoroutine(showStartCode(color));
 
         // get the code the player enters on the cellulo leds
         int length = correctCode.Length;
