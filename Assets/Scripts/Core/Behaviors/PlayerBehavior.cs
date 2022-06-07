@@ -80,6 +80,7 @@ public class PlayerBehavior : AgentBehaviour
             yield return new WaitForSeconds(gameManager.waitTime);
         }
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
     }
 
     // Coroutine to wait for a given amount of time
@@ -133,7 +134,7 @@ public class PlayerBehavior : AgentBehaviour
             }
             // add digit to enteredCode and check for correctness
             enteredCode[i] = currentKey;
-            yield return new WaitUntil(() => agent._celluloRobot.GetTouch(currentKey) == Touch.TouchReleased);
+            yield return new WaitForSeconds(1f);
         }
     }
 
@@ -162,6 +163,7 @@ public class PlayerBehavior : AgentBehaviour
         // TODO: play sound
         StartCoroutine(waitForTime());
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
         return codeIsCorrect;
     }
 
