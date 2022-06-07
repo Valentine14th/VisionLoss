@@ -71,8 +71,8 @@ public class PlayerBehavior : AgentBehaviour
 
     private IEnumerator showCodeCoroutine(int[] code, Color color)
     {
-        agent._celluloRobot.SetGoalOrientation(0, 50);
-        yield return new WaitUntil(() => Math.Abs(agent._celluloRobot.GetTheta()) <= epsilon);
+        agent._celluloRobot.SetGoalOrientation(180, 50);
+        yield return new WaitUntil(() => Math.Abs(180 - agent._celluloRobot.GetTheta()) <= epsilon);
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
@@ -111,8 +111,8 @@ public class PlayerBehavior : AgentBehaviour
 
     private IEnumerator readCodeCoroutine(int[] correctCode, Color color)
     {
-        agent._celluloRobot.SetGoalOrientation(0, 50);
-        yield return new WaitUntil(() => Math.Abs(agent._celluloRobot.GetTheta()) <= epsilon);
+        agent._celluloRobot.SetGoalOrientation(180, 50);
+        yield return new WaitUntil(() => Math.Abs(180 - agent._celluloRobot.GetTheta()) <= epsilon);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, color, 0);
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
