@@ -66,16 +66,20 @@ public class PlayerBehavior : AgentBehaviour
         {
             return;
         }
+        Debug.Log("Show code called");
         StartCoroutine(showCodeCoroutine(code, color));
     }
 
     private IEnumerator showCodeCoroutine(int[] code, Color color)
     {
+        Debug.Log("Coroutine called. Setting cellulo orientation to 180");
         agent._celluloRobot.SetGoalOrientation(180, 50);
         while(Math.Abs(180 - agent._celluloRobot.GetTheta()) > epsilon)
         {
             yield return new WaitForSeconds(0.1f);
+            Debug.Log("Waiting for orientation to be fixed");
         }
+        Debug.Log("Showing code");
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
