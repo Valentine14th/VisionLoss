@@ -72,7 +72,10 @@ public class PlayerBehavior : AgentBehaviour
     private IEnumerator showCodeCoroutine(int[] code, Color color)
     {
         agent._celluloRobot.SetGoalOrientation(180, 50);
-        yield return new WaitUntil(() => Math.Abs(180 - agent._celluloRobot.GetTheta()) <= epsilon);
+        while(Math.Abs(180 - agent._celluloRobot.GetTheta()) > epsilon)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
         for(int i = 0; i < code.Length; ++i)
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
