@@ -13,7 +13,6 @@ public class Pause : MonoBehaviour
 
     void Start(){
         //pause();
-        Debug.Log("paused game at start");
     }
     public void onClick(){
         if(paused){

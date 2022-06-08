@@ -97,7 +97,7 @@ public class MapConfiguration : MonoBehaviour
             size.z = 0;
             map.GetComponent<BoxCollider>().size=size; 
         }
-        spawedCellulos.transform.localPosition = Vector3.zero;
+        //spawedCellulos.transform.localPosition = Vector3.zero;
     }
 }
 

@@ -40,16 +40,11 @@ public class DoorZoneBehavior : MonoBehaviour
         {
             if (gameManager.isWebGame()) 
             {
-                Debug.Log("is it is a cellulo");
                 codeDisplay.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor(), gameObject);
             }
             else
             {
-                //TODO handle when with real cellulos
-                if(cellulo.GetComponent<PlayerBehavior>().readCode(getCorrectCode(), codeZoneScript.getColor()))
-                {
-                    gameObject.SetActive(false);
-                }
+                cellulo.GetComponent<PlayerBehavior>().readCode(getCorrectCode(), codeZoneScript.getColor(), gameObject);
             }
 
 
