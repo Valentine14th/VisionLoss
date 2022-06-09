@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -118,9 +118,43 @@ public class PlayerBehavior : AgentBehaviour
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         int length = correctCode.Length;
+        // bool releasedAll = true; // Uncomment this line to enable releasedAll functionality
         while(enteredCode.Count < length)
         {
-            yield return new WaitForSeconds(0.1f);
+            /*
+            if(releasedAll)
+            {
+                for(int i = 0; i < Config.CELLULO_KEYS; ++i)
+                {
+                    if(agent._celluloRobot.GetTouch(i) == Touch.TouchBegan)
+                    {
+                        enteredCode.Add(i);
+                        Debug.Log("Touch began on key " + i); // If this sends duplicates, enable "releasedAll" functionality
+                        // releasedAll = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // // Remove comments here in bulk (alt+shift+mouse) to allow releasedAll functionality
+                // bool test = true;
+                // for(int i = 0; i < Config.CELLULO_KEYS; ++i)
+                // {
+                //     if(agent._celluloRobot.GetTouch(i) != Touch.TouchReleased)
+                //     {
+                //         test = false;
+                //         break;
+                //     }
+                // }
+                // if(test)
+                // {
+                //     releasedAll = true;
+                //     Debug.Log("All keys were released");
+                // }
+            }
+            */
+            yield return new WaitForSeconds(0.05f); // Test 20 times per second. Can be adjusted
         }
         for(int i = 0; i < length; ++i)
         {
