@@ -43,8 +43,25 @@ public class PlayerBehavior : AgentBehaviour
             agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
         }
         //DEBUG
-        hasStarted = true;
+        //hasStarted = true;
     }
+
+
+    void OnConnectionStatusChanged()
+    {
+        Debug.Log("on connection status changed called");
+
+        //if (agent.GetConnectionStatus() == ConnectionStatus.ConnectionStatusConnected)
+        //{
+            Debug.Log("set goal position called");
+            gameManager.setWebGame(false);
+            //gameManager.StopTimer();
+            //gameManager.ResetTimer();
+            agent.isMoved = false;
+            agent._celluloRobot.SetGoalPosition(startingPosX, startingPosY, agent.maxAccel);
+        //}
+    }
+
     /**
     void FixedUpdate()
     {
@@ -103,6 +120,7 @@ public class PlayerBehavior : AgentBehaviour
     // Goal angle reached
     public void OnGoalPoseReached()
     {
+        Debug.Log("OnGoalPoseReached called");
         if(!hasStarted)
         {
             hasStarted = true;
@@ -114,6 +132,7 @@ public class PlayerBehavior : AgentBehaviour
 
     private IEnumerator readCodeCoroutine(int[] correctCode, Color color, GameObject door)
     {
+        Debug.Log("readCodeCoroutine called");
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, color, 0);
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
@@ -156,6 +175,7 @@ public class PlayerBehavior : AgentBehaviour
             */
             yield return new WaitForSeconds(0.05f); // Test 20 times per second. Can be adjusted
         }
+        Debug.Log("code is long enough");
         for(int i = 0; i < length; ++i)
         {
             if(enteredCode[i] != correctCode[i])
@@ -167,6 +187,7 @@ public class PlayerBehavior : AgentBehaviour
         agent.SetVisualEffect(VisualEffect.VisualEffectPulse, (codeIsCorrect) ? Color.green : Color.red, 0);
         if (codeIsCorrect)
         {
+            Debug.Log("code is correct, door should disapear");
             door.SetActive(false);
             // TODO: play sound
         }
@@ -177,7 +198,7 @@ public class PlayerBehavior : AgentBehaviour
 
     void OnTouchBegan(int key)
     {
-        Debug.Log("touch began");
+        Debug.Log("OnTouchBegan called");
         enteredCode.Add(key);
     }
 

@@ -78,6 +78,11 @@ public class GameManager : MonoBehaviour
         return webGame;
     }
 
+    public void setWebGame(bool set)
+    {
+        webGame = set;
+    }
+
     public void setNbOfDoors(int nb)
     {
         nbOfDoors = nb;
