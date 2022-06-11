@@ -9,6 +9,7 @@ public class CodeZoneBehavior : MonoBehaviour
     public GameObject GameManager;
     private GameManager gameManager;
     public GameObject display;
+    public AudioSource displaySound;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +49,8 @@ public class CodeZoneBehavior : MonoBehaviour
         GameObject cellulo = other.transform.parent.gameObject;
         if (cellulo.tag == "Cellulo")
         {
+            displaySound.Play();
+            Debug.Log("sound played");
             if (gameManager.isWebGame()) // if (gameManager.isWebGame())
             {
                 display.GetComponent<CodeDisplay>().displayCode(code, color);

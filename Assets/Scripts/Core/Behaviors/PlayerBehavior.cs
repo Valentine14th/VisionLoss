@@ -29,6 +29,8 @@ public class PlayerBehavior : AgentBehaviour
 
     public float startingPosX;
     public float startingPosY;
+    public AudioSource doorUnlock;
+    public AudioSource successSound;
 
     private List<int> enteredCode;
 
@@ -47,7 +49,8 @@ public class PlayerBehavior : AgentBehaviour
     }
 
 
-    void OnConnectionStatusChanged()
+
+    void OnConnectionStatusChanged(object sender, EventArgs e)
     {
         Debug.Log("on connection status changed called");
 
@@ -61,11 +64,32 @@ public class PlayerBehavior : AgentBehaviour
             agent._celluloRobot.SetGoalPosition(startingPosX, startingPosY, agent.maxAccel);
         //}
     }
+    /*
+    private IEnumerator spitCoords()
+    {
+        while (true)
+        {
+            Debug.Log("Coordinates: " + agent._celluloRobot.GetX() + ", " + agent._celluloRobot.GetY());
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    */
 
-    /**
+    
     void FixedUpdate()
     {
+        /*
+        if (!hasStarted)
+        {
+            Debug.Log("reset");
+            hasStarted = true;
+            agent._celluloRobot.Reset();
+        }
+        */
+
+        //couocu
         
+        /*
         if(!hasStarted && !walking)
         {
             agent._celluloRobot.SetGoalPosition(startingPosX, startingPosY, agent.maxAccel);
@@ -83,9 +107,10 @@ public class PlayerBehavior : AgentBehaviour
             agent.isMoved = true;
             
         }
+        */
         
     }
-    **/
+   
 
     // Method to show the code on the cellulo
     public void showCode(int[] code, Color color)
@@ -189,6 +214,9 @@ public class PlayerBehavior : AgentBehaviour
         {
             Debug.Log("code is correct, door should disapear");
             door.SetActive(false);
+            doorUnlock.Play();
+            successSound.Play();
+
             // TODO: play sound
         }
         yield return new WaitForSeconds(gameManager.waitTime);

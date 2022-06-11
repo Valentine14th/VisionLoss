@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text timerText;
 
     public GameObject winDisplay;
+    public AudioSource reachExit;
+    public AudioSource winSound;
 
 
     // ------- END OF VARIABLES FOR CODE MANAGEMENT ------- //
@@ -95,9 +97,14 @@ public class GameManager : MonoBehaviour
 
     public void playerWon(int id)
     {
-        won[id-1] = true;
+        if (!won[id - 1])
+        {
+            won[id - 1] = true;
+            reachExit.Play();
+        }
         if(won[0] && won[1])
         {
+            winSound.Play();
             Win();
         }
     }

@@ -11,6 +11,7 @@ public class DoorZoneBehavior : MonoBehaviour
     public GameObject codeDisplay;
     private bool isShowing; // true when the enterCode display is showing
     private int[] enteredCode; //the code the user has currently entered
+    public AudioSource doorCodeSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +39,7 @@ public class DoorZoneBehavior : MonoBehaviour
         Debug.Log("coolider is: " + cellulo.name);
         if(cellulo.tag == "Cellulo")
         {
+            doorCodeSound.Play();
             if (gameManager.isWebGame()) 
             {
                 codeDisplay.GetComponent<CodeDisplay>().enterCode(codeZoneScript.getColor(), gameObject);

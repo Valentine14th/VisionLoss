@@ -13,7 +13,7 @@ Shader "Custom/FogOfWar" {
 Properties {
     _Color ("Main Color", Color) = (1,1,1,1)
     _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
-    _FogRadius ("FogRadius", Float) = 1.0
+    _FogRadius ("FogRadius", Float) = 2.0
     _FogMaxRadius("FogMaxRadius", Float) = 0.5
     _Player1_Pos ("_Player1_Pos", Vector) = (0,0,0,1)
     _Player2_Pos ("_Player2_Pos", Vector) = (0,0,0,1)
