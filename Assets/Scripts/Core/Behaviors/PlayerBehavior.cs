@@ -14,21 +14,11 @@ public class PlayerBehavior : AgentBehaviour
     public GameObject GameManager; // Game manager object
     private GameManager gameManager;
 
-    public float linSpeed; // Linear speed to move to the center of a zone
-    public float angSpeed; // Angular speed to move to the center of a zone
-
-    public float epsilon; // Precision of position checks
     public InputKeyboard inputKeyboard; 
     public float wallRange; // Range at which walls are detected
 
-    private bool hasStarted; // Whether the cellulo is has been to the starting position or not
-
     private bool codeIsCorrect;
 
-    //private bool setLed = false;
-
-    public float startingPosX;
-    public float startingPosY;
     public AudioSource doorUnlock;
     public AudioSource successSound;
 
@@ -37,88 +27,20 @@ public class PlayerBehavior : AgentBehaviour
     void Start()
     {
         enteredCode = new List<int>();
-        hasStarted = false;
         gameManager = GameManager.GetComponent<GameManager>();
         if (!gameManager.isWebGame())
         {
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
             agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
-        }
-        //DEBUG
-        //hasStarted = true;
-    }
-
-
-
-    void OnConnectionStatusChanged(object sender, EventArgs e)
-    {
-        Debug.Log("on connection status changed called");
-
-        //if (agent.GetConnectionStatus() == ConnectionStatus.ConnectionStatusConnected)
-        //{
-            Debug.Log("set goal position called");
-            gameManager.setWebGame(false);
-            //gameManager.StopTimer();
-            //gameManager.ResetTimer();
-            agent.isMoved = false;
-            agent._celluloRobot.SetGoalPosition(startingPosX, startingPosY, agent.maxAccel);
-        //}
-    }
-    /*
-    private IEnumerator spitCoords()
-    {
-        while (true)
-        {
-            Debug.Log("Coordinates: " + agent._celluloRobot.GetX() + ", " + agent._celluloRobot.GetY());
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
-    */
-
-    
-    void FixedUpdate()
-    {
-        /*
-        if (!hasStarted)
-        {
-            Debug.Log("reset");
-            hasStarted = true;
-            agent._celluloRobot.Reset();
-        }
-        */
-
-        //couocu
-        
-        /*
-        if(!hasStarted && !walking)
-        {
-            agent._celluloRobot.SetGoalPosition(startingPosX, startingPosY, agent.maxAccel);
-            agent.isMoved = false;
-            walking = true;
-            agent.SetVisualEffect(VisualEffect.VisualEffectPulse, Color.yellow, 0);
-        }
-        
-        if(!hasStarted)
-        {
-            hasStarted = true;
-            walking = false;
-            agent.SetCasualBackdriveAssistEnabled(true); // TODO remove this?
-            agent.ActivateDirectionalHapticFeedback(); // TODO test this, should work with walls directly, otherwise activate normal wall response mode
+            agent.SetCasualBackdriveAssistEnabled(true);
+            agent.ActivateDirectionalHapticFeedback();
             agent.isMoved = true;
-            
         }
-        */
-        
     }
-   
 
     // Method to show the code on the cellulo
     public void showCode(int[] code, Color color)
     {
-        if(!hasStarted)
-        {
-            return;
-        }
         Debug.Log("Show code called");
         StartCoroutine(showCodeCoroutine(code, color));
     }
@@ -136,25 +58,6 @@ public class PlayerBehavior : AgentBehaviour
         agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
     }
 
-    // Coroutine to wait for a given amount of time
-    private IEnumerator waitForTime()
-    {
-        yield return new WaitForSeconds(gameManager.waitTime);
-    }
-
-    // Goal angle reached
-    public void OnGoalPoseReached()
-    {
-        Debug.Log("OnGoalPoseReached called");
-        if(!hasStarted)
-        {
-            hasStarted = true;
-            agent.SetCasualBackdriveAssistEnabled(true); // TODO remove this?
-            //agent.ActivateDirectionalHapticFeedback(); // TODO test this, should work with walls directly, otherwise activate normal wall response mode
-            agent.isMoved = true;
-        }
-    }
-
     private IEnumerator readCodeCoroutine(int[] correctCode, Color color, GameObject door)
     {
         Debug.Log("readCodeCoroutine called");
@@ -162,42 +65,8 @@ public class PlayerBehavior : AgentBehaviour
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
         int length = correctCode.Length;
-        // bool releasedAll = true; // Uncomment this line to enable releasedAll functionality
         while(enteredCode.Count < length)
         {
-            /*
-            if(releasedAll)
-            {
-                for(int i = 0; i < Config.CELLULO_KEYS; ++i)
-                {
-                    if(agent._celluloRobot.GetTouch(i) == Touch.TouchBegan)
-                    {
-                        enteredCode.Add(i);
-                        Debug.Log("Touch began on key " + i); // If this sends duplicates, enable "releasedAll" functionality
-                        // releasedAll = false;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                // // Remove comments here in bulk (alt+shift+mouse) to allow releasedAll functionality
-                // bool test = true;
-                // for(int i = 0; i < Config.CELLULO_KEYS; ++i)
-                // {
-                //     if(agent._celluloRobot.GetTouch(i) != Touch.TouchReleased)
-                //     {
-                //         test = false;
-                //         break;
-                //     }
-                // }
-                // if(test)
-                // {
-                //     releasedAll = true;
-                //     Debug.Log("All keys were released");
-                // }
-            }
-            */
             yield return new WaitForSeconds(0.05f); // Test 20 times per second. Can be adjusted
         }
         Debug.Log("code is long enough");
@@ -216,8 +85,6 @@ public class PlayerBehavior : AgentBehaviour
             door.SetActive(false);
             doorUnlock.Play();
             successSound.Play();
-
-            // TODO: play sound
         }
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
@@ -233,11 +100,6 @@ public class PlayerBehavior : AgentBehaviour
     // Method to read the code entered on the cellulo. Blinks green if the code is correct and red otherwise
     public void readCode(int[] correctCode, Color color, GameObject door)
     {
-        if(!hasStarted)
-        {
-            return;
-        }
-
         // get the code the player enters on the cellulo leds
         enteredCode.Clear();
         StartCoroutine(readCodeCoroutine(correctCode, color, door));
@@ -268,11 +130,6 @@ public class PlayerBehavior : AgentBehaviour
         }
         else
         {
-            if(!hasStarted)
-            {
-                steering.linear = Vector3.zero;
-                return steering;
-            }
             List<Vector3> walls = new List<Vector3>();
 
             // TODO potentially remove this if new template good. Makes the cellulo flee the walls in a given radius
