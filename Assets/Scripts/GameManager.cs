@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         generateCodes();
         nbOfDoors = codeZones.Length;
         Debug.Log("nb of doors is: " + nbOfDoors);
+        ResetTimer();
         StartTimer();
         //webGame = true; // TODO: make it possible to choose
         

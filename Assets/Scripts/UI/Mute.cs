@@ -6,14 +6,14 @@ using TMPro;
 
 public class Mute : MonoBehaviour
 {
-    public float originalVolume = 0;
+    public float originalVolume;
     public bool muted = false;
 
     public Button muteButton;
 
     void Start()
     {
-        mute();
+        originalVolume = AudioListener.volume;
     }
 
     public void onClick(){

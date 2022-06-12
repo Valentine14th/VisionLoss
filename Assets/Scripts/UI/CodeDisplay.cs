@@ -15,6 +15,9 @@ public class CodeDisplay : MonoBehaviour
     private List<int> enteredCode; // the code currently entered by the user
     private bool initialized; // whether the buttons have been put in their varîables yet
     private GameObject currentDoorZone; // is updated whenever enterCode() is called
+    public AudioSource doorUnlock;
+    public AudioSource successSound;
+    public AudioSource failSound;
 
     private CodeDisplay()
     {
@@ -141,12 +144,15 @@ public class CodeDisplay : MonoBehaviour
                     enteredCode.Clear();
                     if (gameManager.isWebGame()) 
                     {
+                        failSound.Play();
                         StartCoroutine(displayRetry());
                     }
                     return false;
                 }
             }
             Debug.Log("code is correct");
+            doorUnlock.Play();
+            successSound.Play();
             return true;
         }
         else
