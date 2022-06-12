@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641252, b: 0.574817, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2450,7 +2450,7 @@ GameObject:
   - component: {fileID: 172181597}
   m_Layer: 0
   m_Name: Door Zone 1
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7969,7 +7969,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1968509230}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &477943691
 AudioSource:
@@ -10006,7 +10006,7 @@ GameObject:
   - component: {fileID: 629228109}
   m_Layer: 0
   m_Name: Door Zone 6
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10827,7 +10827,7 @@ GameObject:
   - component: {fileID: 671199343}
   m_Layer: 0
   m_Name: Door Zone 2
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12741,7 +12741,7 @@ GameObject:
   - component: {fileID: 782099020}
   m_Layer: 0
   m_Name: Door Zone 4
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15486,7 +15486,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeLength: 3
-  webGame: 1
   waitTime: 1
   timerText: {fileID: 1231124865}
   winDisplay: {fileID: 2122711449}
@@ -17613,7 +17612,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2916047611232586596, guid: 6f5f6d7624c2ce5cc8896e584e30f1c5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.2
+      value: 6.774
       objectReference: {fileID: 0}
     - target: {fileID: 2916047611232586596, guid: 6f5f6d7624c2ce5cc8896e584e30f1c5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -17621,7 +17620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2916047611232586596, guid: 6f5f6d7624c2ce5cc8896e584e30f1c5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.92
+      value: -5.728
       objectReference: {fileID: 0}
     - target: {fileID: 3996232962186901251, guid: 6f5f6d7624c2ce5cc8896e584e30f1c5, type: 3}
       propertyPath: ShowRealRobotPosition
@@ -17672,6 +17671,7 @@ MonoBehaviour:
   wallRange: 0.5
   doorUnlock: {fileID: 2018846595}
   successSound: {fileID: 1515269787}
+  failSound: {fileID: 477943691}
 --- !u!1 &1104917470
 GameObject:
   m_ObjectHideFlags: 0
@@ -21557,7 +21557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.45600003, y: 0.8668787}
   m_AnchorMax: {x: 0.45600003, y: 0.8668787}
-  m_AnchoredPosition: {x: -61.27, y: -456}
+  m_AnchoredPosition: {x: -61.27, y: -489}
   m_SizeDelta: {x: 122.5396, y: 127.4604}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1324756456
@@ -21580,9 +21580,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '^^^^^
-
-    Start
+  m_text: 'Start
 
 '
   m_isRightToLeft: 0
@@ -21593,8 +21591,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281371648
-  m_fontColor: {r: 0, g: 0.5471698, b: 0.18782401, a: 1}
+    rgba: 4294924032
+  m_fontColor: {r: 0, g: 0.34189892, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -23955,7 +23953,7 @@ GameObject:
   - component: {fileID: 1441406849}
   m_Layer: 0
   m_Name: Door Zone 7
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24810,7 +24808,7 @@ GameObject:
   - component: {fileID: 1496107244}
   m_Layer: 0
   m_Name: Door Zone 3
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25700,7 +25698,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1968509230}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1528881322
 GameObject:
@@ -28516,7 +28514,7 @@ GameObject:
   - component: {fileID: 1709394654}
   m_Layer: 0
   m_Name: Door Zone 5
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30137,7 +30135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4214186027875092558, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.33
+      value: 5.17
       objectReference: {fileID: 0}
     - target: {fileID: 4214186027875092558, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_LocalPosition.y
@@ -30145,7 +30143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4214186027875092558, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.02
+      value: -5.64
       objectReference: {fileID: 0}
     - target: {fileID: 4214186027875092558, guid: d44936f6062330e28ab4d37456de1881, type: 3}
       propertyPath: m_LocalRotation.w
@@ -30215,6 +30213,7 @@ MonoBehaviour:
   wallRange: 0.5
   doorUnlock: {fileID: 2018846595}
   successSound: {fileID: 1515269787}
+  failSound: {fileID: 477943691}
 --- !u!1 &1813888861
 GameObject:
   m_ObjectHideFlags: 0
@@ -30629,7 +30628,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.45600003, y: 0.8668787}
   m_AnchorMax: {x: 0.45600003, y: 0.8668787}
-  m_AnchoredPosition: {x: 115, y: -456}
+  m_AnchoredPosition: {x: 102, y: -488}
   m_SizeDelta: {x: 122.5396, y: 127.4604}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1839643226
@@ -30652,9 +30651,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '^^^^^
-
-    Start
+  m_text: 'Start
 
 '
   m_isRightToLeft: 0
@@ -30665,8 +30662,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281371648
-  m_fontColor: {r: 0, g: 0.5471698, b: 0.18782401, a: 1}
+    rgba: 4294923520
+  m_fontColor: {r: 0, g: 0.33333334, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -32565,8 +32562,8 @@ Transform:
   - {fileID: 1290947551}
   - {fileID: 1515269786}
   - {fileID: 2018846594}
-  - {fileID: 477943690}
   - {fileID: 1522348536}
+  - {fileID: 477943690}
   m_Father: {fileID: 963194228}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

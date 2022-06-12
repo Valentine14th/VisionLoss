@@ -21,6 +21,7 @@ public class PlayerBehavior : AgentBehaviour
 
     public AudioSource doorUnlock;
     public AudioSource successSound;
+    public AudioSource failSound;
 
     private List<int> enteredCode;
 
@@ -33,7 +34,7 @@ public class PlayerBehavior : AgentBehaviour
             agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
             agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
             agent.SetCasualBackdriveAssistEnabled(true);
-            agent.ActivateDirectionalHapticFeedback();
+            //agent.ActivateDirectionalHapticFeedback();
             agent.isMoved = true;
         }
     }
@@ -74,6 +75,7 @@ public class PlayerBehavior : AgentBehaviour
         {
             if(enteredCode[i] != correctCode[i])
             {
+                failSound.Play();
                 codeIsCorrect = false;
                 break;
             }
@@ -88,9 +90,10 @@ public class PlayerBehavior : AgentBehaviour
         }
         yield return new WaitForSeconds(gameManager.waitTime);
         agent.SetVisualEffect(VisualEffect.VisualEffectConstAll, Color.black, 0);
-        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0);
+        agent.SetVisualEffect(VisualEffect.VisualEffectConstSingle, Color.white, 0); // put back direction led
     }
 
+    // add keys to the entred code
     void OnTouchBegan(int key)
     {
         Debug.Log("OnTouchBegan called");
@@ -132,7 +135,7 @@ public class PlayerBehavior : AgentBehaviour
         {
             List<Vector3> walls = new List<Vector3>();
 
-            // TODO potentially remove this if new template good. Makes the cellulo flee the walls in a given radius
+            // Makes the cellulo flee the walls in a given radius
             Collider[] rangeCheck = Physics.OverlapSphere(transform.position, wallRange);
             foreach(Collider c in rangeCheck)
             {

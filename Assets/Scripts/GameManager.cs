@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public int codeLength;            // Length of the codes
     private int nbOfDoors;             // nb of doors and thus codes in the level
     private bool[] won;                   // whether each player has reached the end of the maze
-    public bool webGame;               // whether we are playing the webbased/screenbased game
+    static public bool webGame = true;   // whether we are playing the webbased/screenbased game
     public float waitTime;             // time between code display pulses
     
     private int startTime = 0;
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("are we in web game " + webGame);
         won = new bool[2];
         won[0] = false;
         won[1] = false;
@@ -83,6 +84,7 @@ public class GameManager : MonoBehaviour
 
     public void setWebGame(bool set)
     {
+        Debug.Log("web game is " + set);
         webGame = set;
     }
 
